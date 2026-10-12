@@ -1,0 +1,27 @@
+# Build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ (keep shared run configs in .run/)
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VS Code (keep shared launch/extensions/settings)
+.vscode/*
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+.factorypath
+
+# OS / misc
+.DS_Store
+*.log
+.env

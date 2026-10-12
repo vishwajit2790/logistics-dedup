@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+    "humao.rest-client",
+    "ms-azuretools.vscode-docker",
+    "mongodb.mongodb-vscode"
+  ]
+}

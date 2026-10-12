@@ -1,0 +1,50 @@
+# docker compose up -d                       -> MongoDB + Redis only
+# docker compose --profile monitoring up -d  -> + Prometheus, Grafana, exporters
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    ports: ["6379:6379"]
+
+  redis-exporter:
+    profiles: [monitoring]
+    image: oliver006/redis_exporter:latest
+    environment:
+      REDIS_ADDR: redis://redis:6379
+    depends_on: [redis]
+
+  mongo-exporter:
+    profiles: [monitoring]
+    image: percona/mongodb_exporter:0.40
+    command: ["--mongodb.uri=mongodb://mongo:27017", "--collect-all", "--compatible-mode"]
+    depends_on: [mongo]
+
+  prometheus:
+    profiles: [monitoring]
+    image: prom/prometheus:latest
+    ports: ["9090:9090"]
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # scrape the app running on your host/IDE
+
+  grafana:
+    profiles: [monitoring]
+    image: grafana/grafana:latest
+    ports: ["3000:3000"]
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+
+volumes:
+  mongo-data:

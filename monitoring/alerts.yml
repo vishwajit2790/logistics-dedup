@@ -1,0 +1,40 @@
+groups:
+  - name: logistics
+    rules:
+      - alert: AppDown
+        expr: up{job="logistics-app"} == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations: {summary: "Logistics app is not being scraped / is down"}
+
+      - alert: RedisFallbacks
+        expr: sum(rate(redis_fallback_total[5m])) > 0
+        for: 2m
+        labels: {severity: warning}
+        annotations: {summary: "App is bypassing Redis; MongoDB is taking the full load"}
+
+      - alert: LowPoolCacheHitRatio
+        expr: |
+          sum(rate(pool_ensure_total{result="redis_hit"}[10m])) / sum(rate(pool_ensure_total[10m])) < 0.5
+          and sum(rate(pool_ensure_total[10m])) > 0.1
+        for: 15m
+        labels: {severity: warning}
+        annotations: {summary: "Less than 50% of pooled lookups are served by Redis"}
+
+      - alert: SlowOrderPlacement
+        expr: histogram_quantile(0.95, sum by (le) (rate(orders_place_seconds_bucket[5m]))) > 0.5
+        for: 5m
+        labels: {severity: warning}
+        annotations: {summary: "p95 order placement latency above 500ms"}
+
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels: {severity: warning}
+        annotations: {summary: "Redis exporter reports Redis down"}
+
+      - alert: MongoDown
+        expr: mongodb_up == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations: {summary: "MongoDB exporter reports MongoDB down"}

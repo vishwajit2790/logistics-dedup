@@ -1,0 +1,26 @@
+### Place an order. Send it TWICE: hierarchy is created once, 2 order rows.
+# (IntelliJ HTTP Client / VS Code REST Client)
+POST http://localhost:8080/orders
+Content-Type: application/json
+
+{
+  "customerId": "CUST-1", "quantity": 1,
+  "networkId": "NET-FEDEX", "networkName": "FedEx Global",
+  "hubId": "HUB-APAC", "hubName": "Asia-Pacific Hub",
+  "fleetId": "FLT-APAC-CARGO", "fleetName": "Custom Cargo Fleet", "fleetMode": "Sea/Road",
+  "containerId": "CON-77", "containerName": "Freight Box #CON-77",
+  "packageId": "PKG-1001", "packageDescription": "Box with tracking ID #PKG-1001", "weightKg": 12.5
+}
+
+> {% client.global.set("orderNo", response.body.orderNo); %}
+
+### Trace the order up the pooled hierarchy (uses orderNo from the call above)
+GET http://localhost:8080/orders/{{orderNo}}/trace
+
+### Health / readiness
+GET http://localhost:8080/actuator/health
+###
+GET http://localhost:8080/actuator/health/readiness
+
+### Prometheus metrics
+GET http://localhost:8080/actuator/prometheus

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LogisticsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="local" />
+    <module name="logistics-dedup" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.logistics.LogisticsApplication" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,321 @@
+{
+  "uid": "logistics-dedup",
+  "title": "Logistics Dedup: Pool, Redis & MongoDB",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Pooled lookups by result (per sec)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (result) (rate(pool_ensure_total[1m]))",
+          "legendFormat": "{{result}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Pool Redis hit ratio",
+      "type": "gauge",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(pool_ensure_total{result=\"redis_hit\"}[5m])) / sum(rate(pool_ensure_total[5m]))",
+          "legendFormat": "hit ratio",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "title": "New hierarchy docs created (1h)",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(increase(pool_ensure_total{result=\"created\"}[1h]))",
+          "legendFormat": "created",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Trace cache hit ratio",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(catalog_cache_total{result=\"hit\"}[5m])) / sum(rate(catalog_cache_total[5m]))",
+          "legendFormat": "hit ratio",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "title": "Redis fallbacks (Redis bypassed)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (op) (rate(redis_fallback_total[5m]))",
+          "legendFormat": "{{op}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Orders placed (per sec)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "rate(orders_placed_total[1m])",
+          "legendFormat": "orders/s",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Order placement latency p50 / p95 / p99",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(orders_place_seconds_bucket[5m])))",
+          "legendFormat": "p50",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(orders_place_seconds_bucket[5m])))",
+          "legendFormat": "p95",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        },
+        {
+          "refId": "C",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(orders_place_seconds_bucket[5m])))",
+          "legendFormat": "p99",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 8,
+      "title": "Redis memory used",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "redis_memory_used_bytes",
+          "legendFormat": "used",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 9,
+      "title": "MongoDB opcounters (per sec)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (legacy_op_type) (rate(mongodb_ss_opcounters[1m]))",
+          "legendFormat": "{{legacy_op_type}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "JVM heap used",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(jvm_memory_used_bytes{area=\"heap\"})",
+          "legendFormat": "heap",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      }
+    }
+  ]
+}

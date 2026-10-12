@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "LogisticsApplication (local)",
+      "request": "launch",
+      "mainClass": "com.example.logistics.LogisticsApplication",
+      "projectName": "logistics-dedup",
+      "env": { "SPRING_PROFILES_ACTIVE": "local" }
+    }
+  ]
+}
