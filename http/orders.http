@@ -15,7 +15,7 @@ Content-Type: application/json
 > {% client.global.set("orderNo", response.body.orderNo); %}
 
 ### Trace the order up the pooled hierarchy (uses orderNo from the call above)
-GET http://localhost:8080/orders/{{orderNo}}/trace
+GET http://localhost:8080/orders/{orderNo}/trace
 
 ### Health / readiness
 GET http://localhost:8080/actuator/health
