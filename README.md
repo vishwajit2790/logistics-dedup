@@ -15,7 +15,11 @@ docker compose up -d        # MongoDB + Redis
 mvn spring-boot:run         # profile "local" is the default
 ```
 Then open `http/orders.http` in IntelliJ or VS Code (REST Client) and send *Place an order* twice:
-you get 2 orders but only one document per hierarchy level. # POSTMAN can be used here.
+you get 2 orders but only one document per hierarchy level.
+
+[`POSTMAN`](https://www.postman.com/) can be used here.
+To try it, POST /orders with the same package details twice, then call GET /orders/{orderNo}/trace for either order.
+Refer [`http/orders.http`](http/orders.http) file.
 
 ## Project structure
 ```
@@ -58,6 +62,8 @@ App endpoints: `/actuator/health`, `/actuator/health/readiness`, `/actuator/prom
 
 Custom metrics: `pool.ensure{type,result}`, `catalog.cache{type,result}`,
 `redis.fallback{op}`, `orders.placed`, `orders.place` (latency histogram).
+
+If installed, MongoDB Compass, [mongodb://localhost:27017](mongodb://localhost:27017) (UI for mongodb).
 
 ## Design notes
 - Duplicates are prevented by MongoDB (atomic `upsert` + `$setOnInsert` on a unique `_id`), not by Redis.

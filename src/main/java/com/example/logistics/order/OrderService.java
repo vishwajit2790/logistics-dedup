@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
-
     private final DocumentPool pool;
     private final CatalogCache cache;
     private final MongoTemplate mongo;
