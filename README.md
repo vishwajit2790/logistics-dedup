@@ -14,7 +14,7 @@ Generate the Maven wrapper once with `mvn wrapper:wrapper` if you want `./mvnw`.
 docker compose up -d        # MongoDB + Redis
 mvn spring-boot:run         # profile "local" is the default
 ```
-Then open `http/orders.http` in IntelliJ or VS Code (REST Client) and send *Place an order* twice:
+Then open [`http/orders.http`](http/orders.http) in IntelliJ or VS Code (REST Client) and send *Place an order* twice:
 you get 2 orders but only one document per hierarchy level.
 
 [`POSTMAN`](https://www.postman.com/) can be used here.
