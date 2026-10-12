@@ -15,7 +15,7 @@ docker compose up -d        # MongoDB + Redis
 mvn spring-boot:run         # profile "local" is the default
 ```
 Then open `http/orders.http` in IntelliJ or VS Code (REST Client) and send *Place an order* twice:
-you get 2 orders but only one document per hierarchy level.
+you get 2 orders but only one document per hierarchy level. # POSTMAN can be used here.
 
 ## Project structure
 ```
