@@ -1,5 +1,5 @@
 ### Place an order. Send it TWICE: hierarchy is created once, 2 order rows.
-# (IntelliJ HTTP Client / VS Code REST Client)
+# (IntelliJ HTTP Client / VS Code REST Client). POSTMAN can also be used here.
 POST http://localhost:8080/orders
 Content-Type: application/json
 
